@@ -69,6 +69,7 @@ var getTalentdata = async ()=> {
     }
     getTalentdata()
     
+    
 var getwishlist = async ()=>{
         const datawishlistRestaurant = await fetch(`/restaurants/getwishlist`, {
             method:'POST',
@@ -109,8 +110,6 @@ var talentslist = talentaafficher.map((e,i) => {
         return (
            <Cardtalent key={i} src={e.src} talent={e} wishlistRestaurantID={wishlistRestaurantID} token={token}/>
         )})
-
-
 
 return(
                      
