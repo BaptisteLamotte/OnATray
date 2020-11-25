@@ -12,7 +12,7 @@ import { Button, Select, Form, Col, Row,Card } from 'antd';
 import Cardtalent from './Cardtalent'
 import { Redirect } from 'react-router-dom';
 
-const { Option } = Select
+const { Option,OptGroup } = Select
 const { Meta } = Card
 
 
@@ -150,18 +150,24 @@ return(
                 name={'Poste recherché'}
                 className="basic-multi-select"
                 classNamePrefix="select">
-                    <Option value='Tous les postes'>Tous les postes</Option>
-                    <Option value='Serveur'>Serveur</Option>
-                    <Option value='Cuisiner'>Cuisinier</Option>
-                    <Option value='Manager'>Manager</Option>
-                    <Option value='Comis'>Comis</Option>
-                    <Option value='Chef de rang'>Chef de rang</Option>
-                    <Option value='Runner'>Runner</Option>
-                    <Option value='Sommelier'>Sommelier</Option>
-                    <Option value='chef'>Chef </Option>
-                    <Option value='chefDePartie'>Chef de partie</Option>
-                    <Option value='Second'>Second</Option>
-                    <Option value='plongeur'>Plongeur</Option>
+                      <OptGroup label="En salle">
+                                <Option value='Voiturier'>Voiturier</Option>
+                                <Option value='Serveur'>Serveur</Option>
+                                <Option value='Garçon de café'>Garçon de café</Option>
+                                <Option value='Plongeur'>Plongeur</Option>
+                                <Option value='Runner'>Runner</Option>
+                                <Option value='Sommelier'>Sommelier</Option>
+                                <Option value='Chef de rang'>Chef de rang</Option>
+                                <Option value="Maître d'hôtel">Maître d'hôtel</Option>
+                                <Option value='Manager'>Manager</Option>
+                            </OptGroup>
+                                <OptGroup label="En cuisine">
+                                <Option value='Chef de cuisine'>Chef de cuisine</Option>
+                                <Option value='chefDePartie'>Chef de partie</Option>
+                                <Option value='Commis de cuisine'>Commis de cuisine</Option>
+                                <Option value="Pizzaiolo">Pizzaiolo</Option>
+                                <Option value="Pâtissier">Pâtissier</Option>
+                         </OptGroup>
                 </Select>
             </Form.Item>
         </Col>

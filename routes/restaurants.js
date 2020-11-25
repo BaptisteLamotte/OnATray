@@ -67,6 +67,7 @@ router.get('/getinformation', async function(req,res,next){
 
 router.post('/recherche-liste-talents',async function(req,res,next){
 var données= JSON.parse(req.body.criteres)
+var restaurant = await restaurantModel.findOne({token:req.body.token})
 var jobminuscule=données.posterecherché
 
 var typedecontrat=données.typedecontrat
