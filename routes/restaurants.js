@@ -23,6 +23,9 @@ router.post('/createAccount', async function(req,res,next){
   // Création des profils, ajout en base de donnée avec un avatar non personnalisé, sécurisation du mot de passe
   var avatar = "https://cdn.pixabay.com/photo/2016/11/29/12/54/bar-1869656_1280.jpg"
   var salt = uid2(32)
+  if(!req.body.restaurantEmail || !req.body.restaurantPassword){
+    res.json({result : false})
+  }else {
   var restauToCheck = await restaurantModel.findOne({email:req.body.restaurantEmail})
   if(restauToCheck === null){
     var newRestau = await new restaurantModel({
@@ -42,17 +45,18 @@ router.post('/createAccount', async function(req,res,next){
       typeOfFood:[],
       wishlistRestaurant:[],
       experience:[],
-      adresselgtlat: JSON.parse(req.body.lnglat),
+    //adresselgtlat: JSON.parse(req.body.lnglat),
       chatRoom:[],
     })
     var restauSaved = await newRestau.save();
     console.log(restauSaved)
     if(restauSaved){
-      res.json({token:restauSaved.token, adresse:restauSaved.adresselgtlat, profil: restauSaved})
+      res.json({result : true , token:restauSaved.token, adresse:restauSaved.adresselgtlat, profil: restauSaved})
     }else{
-      res.json(false)
+      res.json({result : false})
     }
   }
+}
 })
 
 // Affichage de tous les talents de la BDD
@@ -63,7 +67,6 @@ router.get('/getinformation', async function(req,res,next){
 
 router.post('/recherche-liste-talents',async function(req,res,next){
 var données= JSON.parse(req.body.criteres)
-var restaurant = await restaurantModel.findOne({token:req.body.token})
 var jobminuscule=données.posterecherché
 
 var typedecontrat=données.typedecontrat

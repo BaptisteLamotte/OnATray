@@ -25,7 +25,6 @@ const { isValidObjectId } = require('mongoose');
 router.post('/sign_in', async function(req,res,next){
   
 //On cherche d'abord dans la base de données talents (logiquement leur nombre sera superieur)
-
   var talentToSearch = await talentModel.findOne({email : req.body.email})
   if(talentToSearch){
     var hash = SHA256(req.body.password + talentToSearch.salt).toString(encBase64)
@@ -136,7 +135,11 @@ router.post('/getMyChatRoom', async function(req,res,next){
     res.json({result : talentToFind.chatRoom})
   } else {
     var restauToFind = await restaurantModel.findOne({token:req.body.token}).populate('chatRoom').exec()
-    res.json({result : restauToFind.chatRoom})
+    if(restauToFind){
+      res.json({result : restauToFind.chatRoom})
+    }else {
+      res.json({result: 'error'})
+    }
   }
 })
 

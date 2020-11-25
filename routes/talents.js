@@ -17,60 +17,63 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/createAccount', async function(req,res,next){
-const zoneFrance= [
-  [ -5.3173828125, 48.458124202908934 ],
-  [ 2.1313476562500004, 51.26170001449684 ],
-  [ 8.811035156250002, 48.90783374365477 ],
-  [ 7.998046875000001, 43.70709714273101 ],
-  [ 3.2080078125000004, 42.228008913641865 ],
-  [ 1.4941406250000002, 42.293056273848215 ],
-  [ -2.0214843750000004, 43.06838615478111 ],
-  [ -5.3173828125, 48.458124202908934 ]
-]
-var polygoneFrance = {
-  type: "Polygon" ,
-  coordinates: [
-    zoneFrance
+  const zoneFrance= [
+    [ -5.3173828125, 48.458124202908934 ],
+    [ 2.1313476562500004, 51.26170001449684 ],
+    [ 8.811035156250002, 48.90783374365477 ],
+    [ 7.998046875000001, 43.70709714273101 ],
+    [ 3.2080078125000004, 42.228008913641865 ],
+    [ 1.4941406250000002, 42.293056273848215 ],
+    [ -2.0214843750000004, 43.06838615478111 ],
+    [ -5.3173828125, 48.458124202908934 ]
   ]
-}
-  var salt = uid2(32)
-  var talentToCheck = await talentModel.findOne({email:req.body.talentEmail})
-  var avatar = 'https://res.cloudinary.com/dpyqb49ha/image/upload/v1604324805/mucu7fy5dbhrxmhtf1dc.jpg'
-  if(talentToCheck === null){
-    var newTalent = await new talentModel({
-      firstName : req.body.firstName,
-      lastName : req.body.lastName,
-      email : req.body.email,
-      password : SHA256(req.body.password + salt).toString(encBase64),
-      token: uid2(32), 
-      salt : salt,
-      phone : req.body.phone,
-      avatar:avatar,
-      lookingForJob:false,
-      working:false,
-      speakLangage:[],
-      adress:'',
-      adresselgtlat: {
-        type: "Point" ,
-        coordinates: [2.33,48.33]},
-      polygone: polygoneFrance,
-      perimetre :zoneFrance,
-      lookingJob:[],
-      typeofContract: [],
-      wishlistTalent:[],
-      experience:[],
-      formation:[],
-      chatRoom:[],
-      countFave:0,
-    })
-    var talentSaved = await newTalent.save();
-    if(talentSaved){
-      res.json({token : talentSaved.token, profil: talentSaved})
-    }else{
-      res.json(false)
-    }
+  var polygoneFrance = {
+    type: "Polygon" ,
+    coordinates: [
+      zoneFrance
+    ]
   }
-})
+    var salt = uid2(32)
+    var avatar = 'https://res.cloudinary.com/dpyqb49ha/image/upload/v1604324805/mucu7fy5dbhrxmhtf1dc.jpg'
+    if(!req.body.email || !req.body.password){
+      res.json({result : false})
+    }else {
+   var talentToCheck = await talentModel.findOne({email:req.body.email})
+   if(talentToCheck === null){
+      var newTalent = await new talentModel({
+        firstName : req.body.firstName,
+        lastName : req.body.lastName,
+        email : req.body.email,
+        password : SHA256(req.body.password + salt).toString(encBase64),
+        token: uid2(32), 
+        salt : salt,
+        phone : req.body.phone,
+        avatar:avatar,
+        lookingForJob:false,
+        working:false,
+        speakLangage:[],
+        adress:'',
+        adresselgtlat: {
+          type: "Point" ,
+          coordinates: [2.33,48.33]},
+        polygone: polygoneFrance,
+        perimetre :zoneFrance,
+        lookingJob:[],
+        typeofContract: [],
+        wishlistTalent:[],
+        experience:[],
+        formation:[],
+        chatRoom:[],
+        countFave:0,
+      })
+      var talentSaved = await newTalent.save();
+      if(talentSaved){
+        res.json({result : true , token : talentSaved.token, profil: talentSaved})
+      }else{
+        res.json({result : false })
+      }
+    }}
+  })
 
 router.post('/informations', async function(req,res,next){
 
@@ -136,6 +139,7 @@ router.post('/envoi-adresse', async function(req, res, next){
 })
 
 router.post(`/recherche-liste-restaurants`, async function(req, res, next){
+ 
   var donnees = JSON.parse(req.body.restaurant)
   console.log('donnees', donnees)
   var responseAenvoyer = await restaurantModel.find(
@@ -168,8 +172,13 @@ router.post(`/recherche-liste-restaurants`, async function(req, res, next){
 })
 
 router.get('/detail-restaurant/:id', async function(req, res, next){
-  var restaurant = await restaurantModel.findOne({_id:req.params.id})
-  res.json(restaurant)
+
+  if(req.params.id){
+    res.json({result: false})
+  }else{
+    var restaurant = await restaurantModel.findOne({_id:req.params.id})
+    res.json(restaurant)
+  }
 })
 
 router.post('/whishlist', async function( req, res, next){
